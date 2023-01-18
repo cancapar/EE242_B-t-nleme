@@ -115,24 +115,28 @@ int main(void)
   {
 		float temp;
     result = SD_MPU6050_Init(&hi2c1,&mpu1,SD_MPU6050_Device_0,SD_MPU6050_Accelerometer_2G,SD_MPU6050_Gyroscope_250s);
-	  HAL_Delay(50);
-    /* USER CODE END WHILE */
+		
+		if(result == SD_MPU6050_Result_Ok)
+		{
+			HAL_Delay(50);
+			/* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-	  SD_MPU6050_ReadAccelerometer(&hi2c1,&mpu1);
-	  int16_t a_x = mpu1.Accelerometer_X;
-	  int16_t a_y = mpu1.Accelerometer_Y;
-	  int16_t a_z = mpu1.Accelerometer_Z;
-		/* USER CODE END WHILE */
-		sprintf(gonder,"a_x=%d a_y=%d a_z=%d\n",a_x,a_y,a_z);
-		//CDC_Transmit_FS(gonder,sizeof(gonder));
-		HAL_UART_Transmit(&huart3, gonder, strlen(gonder), 1000);
-		HAL_Delay(1000);
-		SD_MPU6050_ReadTemperature(&hi2c1,&mpu1);
-		temp = mpu1.Temperature;
-		sprintf(gonder,"temp=%.2f\n",temp);
-		HAL_UART_Transmit(&huart3, gonder, strlen(gonder), 1000);
-		//CDC_Transmit_FS(gonder,sizeof(gonder));
+			/* USER CODE BEGIN 3 */
+			SD_MPU6050_ReadAccelerometer(&hi2c1,&mpu1);
+			int16_t a_x = mpu1.Accelerometer_X;
+			int16_t a_y = mpu1.Accelerometer_Y;
+			int16_t a_z = mpu1.Accelerometer_Z;
+			/* USER CODE END WHILE */
+			sprintf((char *)gonder,"%d\t%d\t%d\n",a_x,a_y,a_z);
+			//CDC_Transmit_FS(gonder,sizeof(gonder));
+			HAL_UART_Transmit(&huart3, gonder, strlen((char *)gonder), 200);
+			HAL_Delay(200);
+			SD_MPU6050_ReadTemperature(&hi2c1,&mpu1);
+			temp = mpu1.Temperature;
+			sprintf((char *)gonder,"temp=%.2f\n",temp);
+			HAL_UART_Transmit(&huart3, gonder, strlen((char *)gonder), 1000);
+			//CDC_Transmit_FS(gonder,sizeof(gonder));
+		}
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
